@@ -1,76 +1,305 @@
 # Laboratorio 1: Preparación del Entorno Linux para Sistemas Operativos
 
 ## 📌 Objetivo
-Desplegar y verificar la máquina virtual de trabajo que se utilizará a lo largo del semestre mediante Infraestructura como Código (**IaC**).
+
+Desplegar y verificar la máquina virtual de trabajo que se utilizará durante el semestre.
+
+Al finalizar este laboratorio, el estudiante deberá ser capaz de:
+
+* Desplegar una máquina virtual Linux.
+* Verificar que el entorno funciona correctamente.
+* Acceder a la máquina virtual mediante SSH.
+* Comprobar las herramientas necesarias para los laboratorios.
+* Ejecutar un programa de prueba.
+* Documentar la evidencia de la preparación del entorno.
 
 ---
 
-## 🛠️ Requisitos Previos
-Tener instalados en el sistema anfitrión:
-* **VirtualBox** (v6.1 o superior)
-* **Vagrant** o **Terraform**
+## 🛠️ Requisitos previos
+
+El sistema anfitrión debe tener instalados:
+
+* **VirtualBox 6.1 o superior**
+* **Terraform**
+* **Vagrant**
+
+> El estudiante puede utilizar **Terraform** o **Vagrant**, según la opción indicada por el docente.
 
 ---
 
-## 🚀 OPCIÓN A: Despliegue con Terraform (Recomendado)
+# 🚀 Opción A: Despliegue con Terraform
 
-1. Abre la terminal en esta carpeta e inicializa los proveedores:
-   ```bash
-   terraform init
-Auditoría e Inspección del Plan (Paso Obligatorio):
-Genera y revisa el plan de ejecución para verificar la infraestructura antes de aplicar cambios:
+## 1. Abrir la carpeta del laboratorio
 
-Bash
+Abre una terminal y dirígete a la carpeta donde descargaste el laboratorio:
+
+```bash
+cd laboratorio-1
+```
+
+Comprueba su contenido:
+
+```bash
+ls -la
+```
+
+---
+
+## 2. Inicializar Terraform
+
+Ejecuta:
+
+```bash
+terraform init
+```
+
+---
+
+## 3. Revisar el plan
+
+> ⚠️ **Paso obligatorio**
+
+Antes de crear la máquina virtual, ejecuta:
+
+```bash
 terraform plan
-Despliega la máquina virtual:
+```
 
-Bash
+Revisa los recursos que Terraform indica que serán creados.
+
+---
+
+## 4. Crear la máquina virtual
+
+Si el laboratorio utiliza la imagen configurada por defecto:
+
+```bash
 terraform apply -auto-approve
+```
 
-💡 Nota (Uso de archivo .box local):
-Si descargaste previamente la imagen localmente (.box) para evitar consumo de red, puedes pasar el parámetro al plan y al apply:
+Espera hasta que Terraform finalice correctamente.
 
-Bash
+---
+
+# 📦 Uso de una imagen `.box` local
+
+Si el docente te proporciona el archivo:
+
+```text
+ubuntu-bionic.box
+```
+
+colócalo **en la carpeta principal del laboratorio**, junto con los archivos de configuración.
+
+Ejemplo:
+
+```text
+laboratorio-1/
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── Vagrantfile
+├── ubuntu-bionic.box
+└── plantilla_entrega.md
+```
+
+### Si utilizas Terraform
+
+Si la configuración del laboratorio permite seleccionar la imagen mediante `box_source`, utiliza:
+
+```bash
 terraform plan -var="box_source=./ubuntu-bionic.box"
+```
+
+Si el plan es correcto:
+
+```bash
 terraform apply -var="box_source=./ubuntu-bionic.box" -auto-approve
-Para destruir la infraestructura al finalizar:
+```
 
-Bash
-terraform destroy -auto-approve
-🚀 OPCIÓN B: Despliegue directo con Vagrant
-Inicia y aprovisiona la VM:
+> 📌 **Importante:** El archivo debe llamarse exactamente `ubuntu-bionic.box` y estar en la ubicación indicada.
 
-Bash
+---
+
+# 🚀 Opción B: Despliegue con Vagrant
+
+Si utilizas Vagrant, coloca igualmente el archivo:
+
+```text
+ubuntu-bionic.box
+```
+
+en la carpeta del laboratorio.
+
+La estructura será:
+
+```text
+laboratorio-1/
+├── Vagrantfile
+├── ubuntu-bionic.box
+├── plantilla_entrega.md
+└── ...
+```
+
+El `Vagrantfile` proporcionado por el docente está preparado para utilizar la imagen local.
+
+Inicia la máquina virtual con:
+
+```bash
 vagrant up
-(Si utilizas un archivo .box local, edita la línea config.vm.box_url dentro del Vagrantfile).
+```
 
-Accede a la máquina virtual vía SSH:
+Espera hasta que finalice el proceso de aprovisionamiento.
 
-Bash
+---
+
+## 🔑 Acceder a la máquina virtual
+
+Una vez creada la VM, ejecuta:
+
+```bash
 vagrant ssh
-Para apagar o eliminar la VM:
+```
 
-Bash
-vagrant halt    # Apagar
-vagrant destroy # Eliminar
-🔬 Verificación del Entorno en la VM
-Una vez dentro de la Máquina Virtual (vía SSH):
+A partir de este momento, los siguientes comandos deben ejecutarse **dentro de la máquina virtual**.
 
-Dirígete a la carpeta de trabajo del curso:
+---
 
-Bash
+# 🔬 Verificación del entorno
+
+## 1. Ir a la carpeta del curso
+
+Dentro de la máquina virtual:
+
+```bash
 cd ~/laboratorios/unidad1
-Ejecuta el binario de prueba compilado durante el aprovisionamiento:
+```
 
-Bash
+Comprueba que estás en la ubicación correcta:
+
+```bash
+pwd
+```
+
+---
+
+## 2. Ejecutar el programa de prueba
+
+Ejecuta:
+
+```bash
 ./test_proc
-Confirma la instalación de las herramientas de inspección ejecutando:
+```
 
-Bash
+El programa debe ejecutarse correctamente.
+
+📸 **Toma una captura de pantalla de este resultado.**
+
+---
+
+## 3. Verificar GCC
+
+```bash
+gcc --version
+```
+
+---
+
+## 4. Verificar Make
+
+```bash
+make --version
+```
+
+---
+
+## 5. Verificar Strace
+
+```bash
+strace -V
+```
+
+---
+
+## 6. Verificar Htop
+
+```bash
+htop --version
+```
+
+---
+
+# ✅ Lista de comprobación
+
+| Elemento           | Comando                          | Verificado |
+| ------------------ | -------------------------------- | :--------: |
+| Máquina virtual    | `vagrant up` / `terraform apply` |      ☐     |
+| Acceso a la VM     | `vagrant ssh`                    |      ☐     |
+| GCC                | `gcc --version`                  |      ☐     |
+| Make               | `make --version`                 |      ☐     |
+| Strace             | `strace -V`                      |      ☐     |
+| Htop               | `htop --version`                 |      ☐     |
+| Programa de prueba | `./test_proc`                    |      ☐     |
+
+---
+
+# 📸 Evidencias
+
+El estudiante debe presentar las siguientes capturas:
+
+1. **Despliegue de la máquina virtual**
+
+   * `terraform apply` o `vagrant up`.
+
+2. **Plan de Terraform**
+
+   * `terraform plan`, si utiliza Terraform.
+
+3. **Acceso a la máquina virtual**
+
+   * `vagrant ssh`.
+
+4. **Ejecución del programa:**
+
+```bash
+./test_proc
+```
+
+5. **Verificación de las herramientas:**
+
+```bash
 gcc --version
 make --version
 strace -V
 htop --version
+```
 
-📤 Entrega
-Completa la información en plantilla_entrega.md, adjunta las capturas requeridas de la verificación del entorno y sube los cambios a tu repositorio personal.
+---
+
+# 📤 Entrega
+
+Completa el archivo:
+
+```text
+plantilla_entrega.md
+```
+
+Incluye las capturas de pantalla solicitadas y responde las preguntas de la plantilla.
+
+La entrega se realizará **según el mecanismo indicado por el docente**.
+
+> **No es necesario realizar `git push`, `git commit` ni ninguna otra operación de Git para completar este laboratorio.**
+
+---
+
+# 🎯 Resultado esperado
+
+Al finalizar el laboratorio, debes tener una **máquina virtual Linux funcionando correctamente**, con las herramientas necesarias para los próximos laboratorios de Sistemas Operativos:
+
+* `gcc`
+* `make`
+* `strace`
+* `htop`
+* `test_proc`
+
+La máquina virtual preparada será utilizada en los siguientes laboratorios del curso.
