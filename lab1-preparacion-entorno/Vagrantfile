@@ -1,4 +1,7 @@
 Vagrant.configure("2") do |config|
+  # Para usar un archivo .box local descomenta la siguiente línea y especifica la ruta:
+  # config.vm.box_url = "file://./ubuntu-bionic.box"
+  
   config.vm.box = "ubuntu/bionic64"
   config.vm.hostname = "so-environment"
 
@@ -8,6 +11,6 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
 
-  # Aprovisionamiento mediante el script compartido
+  # Aprovisionamiento con el script compartido
   config.vm.provision "shell", path: "scripts/setup_env.sh"
 end

@@ -23,7 +23,7 @@ echo "===> 2. Creando estructura de directorios del curso..."
 mkdir -p /home/vagrant/laboratorios/unidad1
 cd /home/vagrant/laboratorios/unidad1
 
-echo "===> 3. Creando programa de prueba de entorno (demo_proc)..."
+echo "===> 3. Creando programa de prueba de entorno (test_env.c)..."
 cat << 'C_CODE' > test_env.c
 #include <stdio.h>
 #include <unistd.h>

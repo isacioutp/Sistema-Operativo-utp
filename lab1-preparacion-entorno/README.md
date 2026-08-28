@@ -1,7 +1,7 @@
 # Laboratorio 1: Preparación del Entorno Linux para Sistemas Operativos
 
 ## 📌 Objetivo
-Desplegar y verificar la máquina virtual de trabajo que se utilizará a lo largo del semestre para la ejecución de prácticas de C, kernel, gestión de memoria y llamadas al sistema.
+Desplegar y verificar la máquina virtual de trabajo que se utilizará a lo largo del semestre mediante Infraestructura como Código (**IaC**).
 
 ---
 
@@ -14,87 +14,63 @@ Tener instalados en el sistema anfitrión:
 
 ## 🚀 OPCIÓN A: Despliegue con Terraform (Recomendado)
 
-1. Abre la terminal en esta carpeta e inicializa Terraform:
+1. Abre la terminal en esta carpeta e inicializa los proveedores:
    ```bash
    terraform init
+Auditoría e Inspección del Plan (Paso Obligatorio):
+Genera y revisa el plan de ejecución para verificar la infraestructura antes de aplicar cambios:
 
+Bash
+terraform plan
+Despliega la máquina virtual:
 
+Bash
+terraform apply -auto-approve
 
-1. Despliega la máquina virtual:
+💡 Nota (Uso de archivo .box local):
+Si descargaste previamente la imagen localmente (.box) para evitar consumo de red, puedes pasar el parámetro al plan y al apply:
 
-   Bash
+Bash
+terraform plan -var="box_source=./ubuntu-bionic.box"
+terraform apply -var="box_source=./ubuntu-bionic.box" -auto-approve
+Para destruir la infraestructura al finalizar:
 
-   ```
-   terraform apply -auto-approve
-   ```
+Bash
+terraform destroy -auto-approve
+🚀 OPCIÓN B: Despliegue directo con Vagrant
+Inicia y aprovisiona la VM:
 
-2. Para acceder a la VM o destruirla cuando termines:
+Bash
+vagrant up
+(Si utilizas un archivo .box local, edita la línea config.vm.box_url dentro del Vagrantfile).
 
-   Bash
+Accede a la máquina virtual vía SSH:
 
-   ```
-   # Destruir cuando finalices la práctica:
-   terraform destroy -auto-approve
-   ```
+Bash
+vagrant ssh
+Para apagar o eliminar la VM:
 
-## 🚀 OPCIÓN B: Despliegue directo con Vagrant
-
-Si prefieres usar Vagrant directamente:
-
-1. Inicia y aprovisiona la VM:
-
-   Bash
-
-   ```
-   vagrant up
-   ```
-
-2. Accede a la máquina virtual vía SSH:
-
-   Bash
-
-   ```
-   vagrant ssh
-   ```
-
-3. Para apagar o eliminar la VM:
-
-   Bash
-
-   ```
-   vagrant halt    # Apagar
-   vagrant destroy # Eliminar
-   ```
-
-## 🔬 Verificación del Entorno en la VM
-
+Bash
+vagrant halt    # Apagar
+vagrant destroy # Eliminar
+🔬 Verificación del Entorno en la VM
 Una vez dentro de la Máquina Virtual (vía SSH):
 
-1. Dirígete a la carpeta de trabajo del curso:
+Dirígete a la carpeta de trabajo del curso:
 
-   Bash
+Bash
+cd ~/laboratorios/unidad1
+Ejecuta el binario de prueba compilado durante el aprovisionamiento:
 
-   ```
-   cd ~/laboratorios/unidad1
-   ```
+Bash
+./test_proc
+Confirma la instalación de las herramientas de inspección ejecutando:
 
-2. Ejecuta el binario de prueba compilado durante el aprovisionamiento:
+Bash
+gcc --version
+make --version
+strace -V
+htop --version
 
-   Bash
-
-   ```
-   ./test_proc
-   ```
-
-3. Confirma la instalación de las herramientas de inspección ejecutando:
-
-   Bash
-
-   ```
-   gcc --version
-   make --version
-   strace -V
-   htop --version
-   ```
-
-## 
+📤 Entrega
+Completa la información en plantilla_entrega.md, adjunta las capturas requeridas de la verificación del entorno y sube los cambios a tu repositorio personal.
