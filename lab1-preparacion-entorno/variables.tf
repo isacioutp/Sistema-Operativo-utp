@@ -1,7 +1,7 @@
 variable "box_source" {
   type        = string
-  default     = ./focal-server-cloudimg-amd64-vagrant.box
-  description = "Ruta local (ej: ./ubuntu-bionic.box) o URL remota del archivo .box para la imagen de VirtualBox"
+  default     = "./focal-server-cloudimg-amd64-vagrant.box"
+  description = "Ruta local o URL remota del archivo .box para la imagen de VirtualBox"
 }
 
 variable "vm_cpus" {
