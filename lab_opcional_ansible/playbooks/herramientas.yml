@@ -1,0 +1,19 @@
+---
+- name: Asegurar herramientas de Sistemas Operativos
+  hosts: novatech
+  become: true
+
+  tasks:
+    - name: Actualizar índice de paquetes
+      ansible.builtin.apt:
+        update_cache: true
+
+    - name: Instalar herramientas base del curso
+      ansible.builtin.apt:
+        name:
+          - build-essential
+          - htop
+          - strace
+          - procps
+          - tree
+        state: present

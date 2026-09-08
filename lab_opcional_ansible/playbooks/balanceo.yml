@@ -1,0 +1,27 @@
+---
+- name: Programar balanceo nocturno del servicio de recomendaciones
+  hosts: novatech
+  become: true
+
+  tasks:
+    - name: Crear script de balanceo de carga
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          echo "Balanceando carga de recomendaciones (simulación)…"
+        dest: /usr/local/bin/balancear.sh
+        mode: "0755"
+
+    - name: Añadir tarea nocturna a cron
+      ansible.builtin.cron:
+        name: "Balanceo nocturno recomendaciones"
+        minute: "30"
+        hour: "2"
+        job: "/usr/local/bin/balancear.sh"
+      notify: Reiniciar cron
+
+  handlers:
+    - name: Reiniciar cron
+      ansible.builtin.service:
+        name: cron
+        state: restarted
