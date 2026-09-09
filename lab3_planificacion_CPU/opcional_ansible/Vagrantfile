@@ -1,0 +1,20 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "ubuntu/bionic64"
+  config.vm.hostname = "novatech-ansible"
+
+  # Puerto fijo para que el inventario de Ansible sea determinista
+  # (no choca con la VM del Lab 1 que usa el 2222 por defecto)
+  config.vm.network "forwarded_port", guest: 22, host: 2202, id: "ssh"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "vm-layout-ansible"
+    vb.memory = "1024"
+    vb.cpus = 1
+  end
+
+  # El nodo administrado solo necesita Python 3 (ya viene en Ubuntu)
+  config.vm.provision "shell", inline: <<-SHELL
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -y
+  SHELL
+end

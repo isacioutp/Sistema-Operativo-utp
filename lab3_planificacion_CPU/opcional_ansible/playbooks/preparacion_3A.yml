@@ -1,0 +1,38 @@
+---
+- name: Preparación Lab 3A — desplegar carga sintética con prioridades
+  hosts: novatech
+  become: true
+
+  tasks:
+    - name: Proceso de referencia (ni normal)
+      ansible.builtin.shell: |
+        nohup sha256sum /dev/urandom > /dev/null 2>&1 &
+        echo $!
+      register: ref
+
+    - name: Proceso degradado con nice -n 10
+      ansible.builtin.shell: |
+        nohup nice -n 10 sha256sum /dev/urandom > /dev/null 2>&1 &
+        echo $!
+      register: degradado
+
+    - name: Proceso anclado al núcleo 0 (taskset)
+      ansible.builtin.shell: |
+        nohup taskset -c 0 sha256sum /dev/urandom > /dev/null 2>&1 &
+        echo $!
+      register: anclado
+
+    - name: Mostrar PIDs desplegados
+      ansible.builtin.debug:
+        msg: |
+          normal  -> PID {{ ref.stdout.strip() }}
+          nice+10 -> PID {{ degradado.stdout.strip() }}
+          core0   -> PID {{ anclado.stdout.strip() }}
+
+    - name: Tabla de prioridades (ps -eo pid,ni,pri)
+      ansible.builtin.command: ps -eo pid,ni,pri,comm --sort=-ni
+      register: tabla
+
+    - name: Imprimir tabla de prioridades
+      ansible.builtin.debug:
+        var: tabla.stdout

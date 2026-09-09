@@ -1,0 +1,27 @@
+---
+- name: Preparación Lab 3B — desplegar y ejecutar la simulación de algoritmos
+  hosts: novatech
+  gather_facts: false
+
+  vars:
+    destino: /home/vagrant/laboratorios/scheduler_sim.py
+
+  tasks:
+    - name: Crear carpeta de laboratorios
+      ansible.builtin.file:
+        path: /home/vagrant/laboratorios
+        state: directory
+
+    - name: Copiar scheduler_sim.py desde tu control node
+      ansible.builtin.copy:
+        src: ../files/scheduler_sim.py
+        dest: "{{ destino }}"
+        mode: "0644"
+
+    - name: Ejecutar la simulación en el servidor
+      ansible.builtin.command: python3 /home/vagrant/laboratorios/scheduler_sim.py
+      register: salida
+
+    - name: Mostrar resultados (FCFS y SJF salen IGUALES → sjf() tiene bug)
+      ansible.builtin.debug:
+        var: salida.stdout
